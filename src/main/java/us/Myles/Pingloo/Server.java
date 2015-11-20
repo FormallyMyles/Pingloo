@@ -14,7 +14,7 @@ public class Server {
 	private static final ServerBootstrap bootstrap = new ServerBootstrap();
 
 	public static void main(String[] args) {
-		EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
+		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		bootstrap.group(bossGroup, workerGroup);
 		bootstrap.channel(NioServerSocketChannel.class);

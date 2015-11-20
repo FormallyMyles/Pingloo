@@ -64,7 +64,7 @@ public class ServerHandler extends ByteToMessageDecoder {
                 ByteBuf out = Unpooled.buffer();
                 ByteBuf data = Unpooled.buffer();
                 PacketUtil.writeVarInt(0, data);
-                PacketUtil.writeString(response.replace('\u00A7', '\u00A7'), data);
+                PacketUtil.writeString(response, data);
                 PacketUtil.writeVarInt(data.readableBytes(), out);
                 out.writeBytes(data);
                 ctx.writeAndFlush(out);
