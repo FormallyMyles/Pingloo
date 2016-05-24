@@ -4,13 +4,14 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+
 import java.util.List;
 
 public class ServerHandler extends ByteToMessageDecoder {
-	@Override
-	protected void decode(ChannelHandlerContext ctx, ByteBuf in,
-			List<Object> o) throws Exception {
-        if(!ctx.channel().isOpen()) return;
+    @Override
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in,
+                          List<Object> o) throws Exception {
+        if (!ctx.channel().isOpen()) return;
         // handshake
         int length = PacketUtil.readVarInt(in);
         int id = PacketUtil.readVarInt(in);
@@ -18,15 +19,15 @@ public class ServerHandler extends ByteToMessageDecoder {
 
         if (id == 0) {
             // status request
-            if(length != 1) {
+            if (length != 1) {
                 try {
                     int version = PacketUtil.readVarInt(in);
                     String address = PacketUtil.readString(in);
                     int port = in.readUnsignedShort();
                     int state = PacketUtil.readVarInt(in);
                     System.out.println("Client: " + version + ", " + address + ", " + port + ", " + state);
-                    if(state == 2){
-                        // send crypt req
+                    if (state == 2) {
+                        // they're trying to login, kick them!
                         ByteBuf out = Unpooled.buffer();
                         ByteBuf data = Unpooled.buffer();
                         PacketUtil.writeVarInt(0x00, data);
@@ -38,7 +39,7 @@ public class ServerHandler extends ByteToMessageDecoder {
                 } catch (Exception ignored) {
                     // *shrugs*
                 }
-            }else {
+            } else {
                 System.out.println("Sending Ping!");
                 // status response
                 String response = "{\n" +
@@ -85,5 +86,5 @@ public class ServerHandler extends ByteToMessageDecoder {
             ctx.writeAndFlush(out);
         }
 
-	}
+    }
 }
